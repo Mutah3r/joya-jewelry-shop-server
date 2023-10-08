@@ -28,6 +28,7 @@ async function run() {
 
         const database = client.db('JoyaJewelry');
         const usersCollection = database.collection('users');
+        const brandsCollection = database.collection('brands');
 
 
         // save user info when user registers using email and password
@@ -75,6 +76,13 @@ async function run() {
             console.log(result);
             res.send(result);
         });
+
+        // brands route
+        app.get('/brands', async(req, res) => {
+            const sortingCriteria = { name: 1 };
+            const documents = await brandsCollection.find({}).sort(sortingCriteria).toArray();
+            res.send(documents);
+        })
 
         app.get('/', (req, res) => {
             res.send('Hello World!')

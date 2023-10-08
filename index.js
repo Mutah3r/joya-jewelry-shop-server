@@ -29,7 +29,14 @@ async function run() {
         const database = client.db('JoyaJewelry');
         const usersCollection = database.collection('users');
         const brandsCollection = database.collection('brands');
+        const productsCollection = database.collection('products');
 
+        // add product
+        app.post('/add-product', async(req, res) => {
+            const product = req.body;
+            const result = await productsCollection.insertOne(product);
+            res.send(result);
+        })
 
         // save user info when user registers using email and password
         app.put('/users/:email', async (req, res) => {

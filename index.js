@@ -32,7 +32,7 @@ async function run() {
         const productsCollection = database.collection('products');
 
         // add product
-        app.post('/add-product', async(req, res) => {
+        app.post('/add-product', async (req, res) => {
             const product = req.body;
             const result = await productsCollection.insertOne(product);
             res.send(result);
@@ -49,7 +49,7 @@ async function run() {
 
             const query = { email: email }
             const options = { upsert: true }
-            
+
             const updateDoc = {
                 $set: {
                     name: name,
@@ -60,7 +60,7 @@ async function run() {
                     address: address,
                 }
             }
-            
+
             const result = await usersCollection.updateOne(query, updateDoc, options);
 
             res.send(result);
@@ -69,32 +69,41 @@ async function run() {
         // save user info when user logs in using google
         app.put('/users/google/:email', async (req, res) => {
             const email = req.params.email;
-            
+
             const query = { email: email }
             const options = { upsert: true }
-            
+
             const updateDoc = {
                 $set: {
                     email: email
                 }
             }
-            
+
             const result = await usersCollection.updateOne(query, updateDoc, options);
             console.log(result);
             res.send(result);
         });
 
         // brands route
-        app.get('/brands', async(req, res) => {
+        app.get('/brands', async (req, res) => {
             const sortingCriteria = { name: 1 };
             const documents = await brandsCollection.find({}).sort(sortingCriteria).toArray();
             res.send(documents);
         });
 
         // get new arrivals
-        app.get('/new-arrivals', async(req, res) => {
+        app.get('/new-arrivals', async (req, res) => {
             const query = {};
             const sort = { dateAdded: -1 };
+            const limit = 10
+            const products = await productsCollection.find(query).sort(sort).limit(limit).toArray();
+            res.send(products);
+        });
+
+        // get trending products
+        app.get('/trending-products', async (req, res) => {
+            const query = {};
+            const sort = { views: -1 };
             const limit = 10
             const products = await productsCollection.find(query).sort(sort).limit(limit).toArray();
             res.send(products);

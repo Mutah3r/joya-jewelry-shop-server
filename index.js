@@ -89,7 +89,16 @@ async function run() {
             const sortingCriteria = { name: 1 };
             const documents = await brandsCollection.find({}).sort(sortingCriteria).toArray();
             res.send(documents);
-        })
+        });
+
+        // get new arrivals
+        app.get('/new-arrivals', async(req, res) => {
+            const query = {};
+            const sort = { dateAdded: -1 };
+            const limit = 10
+            const products = await productsCollection.find(query).sort(sort).limit(limit).toArray();
+            res.send(products);
+        });
 
         app.get('/', (req, res) => {
             res.send('Hello World!')

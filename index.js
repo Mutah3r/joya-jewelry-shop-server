@@ -91,6 +91,7 @@ async function run() {
             res.send(documents);
         });
 
+        // get all jewelries
         app.get('/products', async (req, res) => {
             const products = await productsCollection.find({}).toArray();
             res.send(products);
@@ -119,7 +120,15 @@ async function run() {
             const productId = req.params.id;
             const product = await productsCollection.findOne({ _id: new ObjectId(productId) });
             res.send(product)
-        })
+        });
+
+        // get products by email
+        app.get('/products/email/:email', async(req, res) => {
+            const userEmail = req.params.email;
+            const query = { addedBy: userEmail };
+            const products = await productsCollection.find(query).toArray();
+            res.send(products);
+        });
 
         app.get('/', (req, res) => {
             res.send('Hello World!')

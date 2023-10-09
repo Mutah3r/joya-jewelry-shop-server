@@ -130,6 +130,14 @@ async function run() {
             res.send(products);
         });
 
+        // get user info by email
+        app.get('/users/:email', async(req, res) => {
+            const userEmail = req.params.email;
+            const query = { email: userEmail };
+            const userInfo = await usersCollection.find(query).toArray();
+            res.send(userInfo);
+        });
+
         app.get('/', (req, res) => {
             res.send('Hello World!')
         });

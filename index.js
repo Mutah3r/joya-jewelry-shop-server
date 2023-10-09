@@ -69,13 +69,15 @@ async function run() {
         // save user info when user logs in using google
         app.put('/users/google/:email', async (req, res) => {
             const email = req.params.email;
+            const name = req.body.name;
 
             const query = { email: email }
             const options = { upsert: true }
 
             const updateDoc = {
                 $set: {
-                    email: email
+                    email: email,
+                    name: name
                 }
             }
 
@@ -136,6 +138,12 @@ async function run() {
             const query = { email: userEmail };
             const userInfo = await usersCollection.find(query).toArray();
             res.send(userInfo);
+        });
+
+        // get all-user info
+        app.get('/users', async(req, res) => {
+            const users = await usersCollection.find({}).toArray();
+            res.send(users);
         });
 
         app.get('/', (req, res) => {
